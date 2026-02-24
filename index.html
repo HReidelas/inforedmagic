@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REDMAGIC 11 Pro</title>
+    
+    <style>
+        html { scroll-behavior: smooth; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { background-color: #000; color: #fff; overflow-x: hidden; }
+
+        .tela-inicial {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #222 0%, #000 70%);
+            position: relative;
+            z-index: 2;
+        }
+
+        .tela-inicial h1 { 
+            color: #ff0033; 
+            letter-spacing: 5px; 
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px rgba(255, 0, 51, 0.6);
+        }
+        
+        .seta { 
+            font-size: 40px; 
+            margin-top: 20px;
+            animation: piscar 1.5s infinite; 
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @keyframes piscar {
+            0%, 100% { opacity: 1; transform: translateY(0); }
+            50% { opacity: 0.2; transform: translateY(15px); }
+        }
+
+        /* CONTAINER DA SEÇÃO DE VÍDEO */
+        .secao-video {
+            position: relative;
+            min-height: 120vh; /* Um pouco maior para o efeito de scroll */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* VÍDEO DE FUNDO (DESFOCADO) */
+        .video-blur-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5); /* Aumenta para cobrir as bordas */
+            width: 110%;
+            height: 110%;
+            object-fit: cover;
+            filter: blur(50px) brightness(0.4); /* O segredo está aqui */
+            opacity: 0;
+            transition: opacity 2s ease;
+            z-index: 1;
+        }
+
+        .video-blur-bg.ativo {
+            opacity: 0.7;
+        }
+
+        /* CAIXA DO VÍDEO PRINCIPAL */
+        .caixa-video {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 20px;
+            overflow: hidden;
+            
+            opacity: 0;
+            transform: scale(0.5) translateY(100px);
+            transition: all 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 0 rgba(255, 0, 51, 0);
+            will-change: transform, opacity;
+        }
+
+        .caixa-video.ativo {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            box-shadow: 0 0 80px rgba(255, 0, 51, 0.3);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .caixa-video { width: 90%; }
+            .tela-inicial h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tela-inicial">
+        <h1>DESCUBRA O PODER DO REDMAGIC 11 PRO</h1>
+        <a href="#video-anchor" class="seta">FEITO PARA OS PRO 👇</a>
+    </div>
+
+    <div id="video-anchor" class="secao-video">
+        <video class="video-blur-bg" id="bgVideo" autoplay loop muted playsinline>
+            <source src="video.mp4" type="video/mp4">
+        </video>
+
+        <div class="caixa-video" id="meuVideo">
+            <video autoplay loop muted playsinline preload="auto">
+                <source src="video.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <script>
+        const elementoVideo = document.getElementById('meuVideo');
+        const bgVideo = document.getElementById('bgVideo');
+
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach(entrada => {
+                if (entrada.isIntersecting) {
+                    elementoVideo.classList.add('ativo');
+                    bgVideo.classList.add('ativo');
+                } else {
+                    elementoVideo.classList.remove('ativo');
+                    bgVideo.classList.remove('ativo');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        observador.observe(elementoVideo);
+    </script>
+
+</body>
+</html>
